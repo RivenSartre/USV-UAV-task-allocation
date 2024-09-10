@@ -1,0 +1,21 @@
+function [objf] = sinoAirObjfuntion(x, AirSet, SurSet, us, ua, CostA)
+    % X = [x_1,y_1,x_2,y_2,u];
+    X1 = [x(1),x(2)];
+    X2 = [x(3),x(4)];
+    u = x(5);
+
+    Ts1 = norm(SurSet(1,:) - X1)/us;
+    Ts2 = norm(X2 - SurSet(2,:))/us;
+    Tss = norm(X1 - X2)/u;
+    
+    Ta1 = norm(AirSet(1,:) - X1)/ua;
+    Ta2 = norm(X2 - AirSet(1,:))/ua;
+    Taa = CostA;
+
+    lambda1 = 5;
+    lambda2 = 5;
+    
+    F = Ts1 + Ts2 + Tss;
+    F1 = lambda1 * Tss * abs(us-u);
+    objf = 
+end

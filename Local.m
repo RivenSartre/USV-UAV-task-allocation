@@ -1,0 +1,101 @@
+clc
+clear
+
+%% 独立航空点任务 - 1点
+AirSet = [500, 0];
+SurSet = [0, -100; 1000, -100];
+us = 2;
+ua = 15;
+CostA = [100];
+
+% X = [x_1,y_1,x_2,y_2,u];
+fobj = @(x) sinoAirObjfuntion(x, AirSet, SurSet, us, CostA);
+
+lb=[300,-200,300,-200,1,10];              
+ub=[700,200,700,200,3,20]; 
+
+SearchAgents_no=100; 
+Max_iteration=300; 
+dim=6; 
+[Best_pos,Best_score,SAO_curve]=GDSAO(SearchAgents_no,Max_iteration,lb,ub,dim,fobj); 
+
+%Best_pos
+[objf,F1,F2] = costfun(Best_pos, AirSet, SurSet, us, CostA)
+
+%% 独立航空点任务 - 2点
+AirSet = [500, 0; -500, 0];
+SurSet = [0, -100; 1000, -100];
+us = 3;
+ua = 15;
+CostA = [50; 100];
+
+% X = [x_1,y_1,x_2,y_2,u];
+fobj = @(x) doubAirObjfuntion(x, AirSet, SurSet, us, CostA);
+
+lb=[300,-200,300,-200,1,1];              
+ub=[700,200,700,200,5,20]; 
+
+SearchAgents_no=100; 
+Max_iteration=300; 
+dim=6; 
+[Best_pos,Best_score,SAO_curve]=GDSAO(SearchAgents_no,Max_iteration,lb,ub,dim,fobj); 
+
+%Best_pos
+[objf,F1,F2] = costfun(Best_pos, AirSet, SurSet, us, CostA)
+
+%% 独立航空点任务 - 3点
+AirSet = [250, 500; 500, 0; 750, 500];
+Airs = [AirSet(1,1),AirSet(1,2)];
+Aire = [AirSet(end,1),AirSet(end,2)];
+range = 200;
+
+SurSet = [0, 0; 1000, 0];
+us = 2;
+ua = 15;
+CostA = [50; 100 ; 50];
+
+% X = [x_1,y_1,x_2,y_2,u];
+fobj = @(x) tribAirObjfuntion(x, AirSet, SurSet, us, CostA);
+
+lb=[Airs(1)-range,Airs(2)-range,Aire(1)-range,Aire(2)-range,1,10];              
+ub=[Airs(1)+range,Airs(2)+range,Aire(1)-range,Aire(2)-range,4,25]; 
+
+SearchAgents_no=100; 
+Max_iteration=300; 
+dim=6; 
+[Best_pos,Best_score,SAO_curve]=GDSAO(SearchAgents_no,Max_iteration,lb,ub,dim,fobj); 
+
+%Best_pos
+[objf,F1,F2] = costfun(Best_pos, AirSet, SurSet, us, CostA)
+
+
+
+%% 复合航空点任务 - 1点
+AirSet = [250, 500; 500, 0; 750, 500];
+Airs = [AirSet(1,1),AirSet(1,2)];
+SurSet = [0, -100; 500, 0; 1000, -100];
+range = 200;
+us = 2;
+ua = 15;
+CostA = [50; 100 ; 50];
+CostS = [100];
+
+% X = [x_1,y_1,u_s,v_a];
+fobj = @(x) CompleObjfuntionD(x, AirSet, SurSet, us, CostA, CostS);
+
+lb=[Airs(1)-range,Airs(2)-range,1,10];              
+ub=[Airs(1)+range,Airs(2)+range,3,20]; 
+
+SearchAgents_no=100; 
+Max_iteration=300; 
+dim=4; 
+[Best_pos,Best_score,SAO_curve]=GDSAO(SearchAgents_no,Max_iteration,lb,ub,dim,fobj); 
+
+%Best_pos
+[G] = findG(Best_pos, AirSet, SurSet, us, CostA, CostS);
+
+
+%%
+X = Airs;
+u = 2;
+v = 15;

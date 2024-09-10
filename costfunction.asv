@@ -1,0 +1,8 @@
+function [Route] = costfunction(X, AirSet, SurSet, Cost)
+    s=[X(1),X(2)];
+    g=[X(3),X(4)];
+    
+    SurSet_exp = [SurSet(1,:);s;g;SurSet(2,:)];
+    AirSet_exp = [s;AirSet;g];
+    Route = 
+end
